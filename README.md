@@ -1,2 +1,2 @@
 # sledgeMobile
-Mobile version of Sledge Software Solutions
+## Welcome to the Mobile version of Sledge Software Solutions.

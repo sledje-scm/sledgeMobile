@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "302950149301",
+    "project_id": "sledge-9a90a",
+    "storage_bucket": "sledge-9a90a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:302950149301:android:64ba3abe378585b2f8e2fc",
+        "android_client_info": {
+          "package_name": "com.example.sledge_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGs1fpZq6a7AfnjA1KDoJ2Mz5Sk9NJ6GQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

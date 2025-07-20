@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+// Corrected import path for login page
 
 // Placeholder components for the different screens, reflecting e-commerce content
 class ShopPage extends StatelessWidget {
@@ -678,18 +679,21 @@ class _CustomHomePageState extends State<CustomHomePage> {
   String? _currentAddress;
   bool _isLocating = false;
 
-  final List<Widget> _pages = const [
-    ShopPage(), // Corresponds to Vision
-    ShelfScreen(), // Corresponds to Support
-    PaymentsScreen(), // Corresponds to Services
-    OrdersScreen(), // Corresponds to Partners
-    YouScreen(), // Corresponds to Login
+  // Define the list of pages and their corresponding navigation labels/icons
+  final List<Map<String, dynamic>> _drawerItems = [
+    {'label': 'Shop', 'icon': Icons.shopping_bag, 'page': const ShopPage()},
+    {'label': 'Shelf', 'icon': Icons.inventory, 'page': const ShelfScreen()},
+    {'label': 'Payments', 'icon': Icons.credit_card, 'page': const PaymentsScreen()},
+    {'label': 'Orders', 'icon': Icons.receipt, 'page': const OrdersScreen()},
+    {'label': 'Profile', 'icon': Icons.person, 'page': const YouScreen()},
   ];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+    // Close the drawer after an item is tapped
+    Navigator.pop(context);
   }
 
   @override
@@ -752,142 +756,160 @@ class _CustomHomePageState extends State<CustomHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      body: SafeArea(
-        child: Column(
+      appBar: AppBar(
+        backgroundColor: Colors.blueAccent,
+        elevation: 0, // No shadow for the app bar
+        leading: Builder( // Allows access to Scaffold for opening drawer
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu, color: Colors.white),
+              onPressed: () {
+                Scaffold.of(context).openDrawer(); // Opens the drawer
+              },
+            );
+          },
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Custom App Bar (dynamically sized with logo)
-            Container(
-              width: screenWidth,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              decoration: const BoxDecoration(color: Colors.blueAccent),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Added the logo here
-                      Image.network(
-                        'https://slege.vercel.app/static/media/navBarLogo1.76ad77f941d4c432a0e0.png',
-                        height: 120, // Changed from 40 to 60
-                        width: 1200, // Changed from 40 to 60
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Icon(
-                          Icons.image, // Fallback icon
-                          color: Color.fromARGB(255, 15, 15, 15),
-                          size: 120,
-                        ),
+            Row(
+              children: [
+                // App Bar Logo
+                Image.network(
+                  'https://slege.vercel.app/static/media/navBarLogo1.76ad77f941d4c432a0e0.png',
+                  height: 40, // Adjusted logo size for app bar
+                  width: 40,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Icon(
+                        Icons.image, // Fallback icon
+                        color: Color.fromARGB(255, 15, 15, 15),
+                        size: 40,
                       ),
-                      const SizedBox(width: 10), // Space between logo and text
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Sledje_Mobile',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              _isLocating
-                                  ? 'Locating...'
-                                  : (_currentAddress ??
-                                      'Unable to get location'),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.white70,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.notifications,
-                            color: Colors.blueAccent,
-                          ),
-                          onPressed: () {
-                            // Notification logic
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4), // Reduced from 8 to 4 to shift up
-                  // Navigation Buttons
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _buildTopNavItem(context, 0, 'Vision', Icons.visibility),
-                      _buildTopNavItem(
-                          context, 1, 'Support', Icons.support_agent),
-                      _buildTopNavItem(
-                          context, 2, 'Services', Icons.business_center),
-                      _buildTopNavItem(context, 3, 'Partners', Icons.handshake),
-                      _buildTopNavItem(context, 4, 'Login', Icons.login),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            // Content Area
-            Expanded(
-              child: Transform.translate(
-                offset: const Offset(0, -30),
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(32),
-                      topRight: Radius.circular(32),
-                    ),
-                  ),
-                  child: _pages[_selectedIndex],
                 ),
+                const SizedBox(width: 10),
+                const Text(
+                  'Sledje_Mobile',
+                  style: TextStyle(
+                    fontSize: 20, // Adjusted font size for app bar
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+            // Location Text
+            Text(
+              _isLocating
+                  ? 'Locating...'
+                  : (_currentAddress ?? 'Unable to get location'),
+              style: const TextStyle(
+                fontSize: 14, // Adjusted font size
+                color: Colors.white70,
               ),
             ),
           ],
         ),
+        actions: [
+          // Notification Icon
+          Container(
+            margin: const EdgeInsets.only(right: 8), // Add some margin
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: IconButton(
+              icon: const Icon(
+                Icons.notifications,
+                color: Colors.blueAccent,
+              ),
+              onPressed: () {
+                // Notification logic
+              },
+            ),
+          ),
+        ],
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero, // Remove default padding
+          children: [
+            // Drawer Header with App Logo and Name
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Colors.blueAccent,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Image.network(
+                    'https://slege.vercel.app/static/media/navBarLogo1.76ad77f941d4c432a0e0.png',
+                    height: 80,
+                    width: 80,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(
+                          Icons.image,
+                          color: Color.fromARGB(255, 15, 15, 15),
+                          size: 60,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Sledje_Mobile',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Drawer Navigation Items (Shop, Shelf, Payments, Orders, Profile)
+            ..._drawerItems.asMap().entries.map((entry) {
+              int index = entry.key;
+              Map<String, dynamic> item = entry.value;
+              return _buildDrawerItem(context, index, item['label'] as String, item['icon'] as IconData);
+            }),
+            // Add a dedicated Logout/Login button in the drawer
+            const Divider(), // A visual separator
+            ListTile(
+              leading: const Icon(Icons.logout, color: Colors.red),
+              title: const Text(
+                'Logout', // Or 'Login' if not logged in
+                style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+              ),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.pushReplacementNamed(context, '/'); // Navigate to login page
+              },
+            ),
+          ],
+        ),
+      ),
+      body: _drawerItems[_selectedIndex]['page'] as Widget, // Display the selected page from the drawer items
     );
   }
 
-  Widget _buildTopNavItem(
+  // Helper function to build individual drawer items
+  Widget _buildDrawerItem(
       BuildContext context, int index, String label, IconData icon) {
     final isSelected = index == _selectedIndex;
-    return TextButton(
-      onPressed: () => _onItemTapped(index),
-      style: TextButton.styleFrom(
-        foregroundColor: isSelected ? Colors.white : Colors.white70,
-        textStyle: const TextStyle(fontSize: 14),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        minimumSize: Size.zero,
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    return ListTile(
+      leading: Icon(icon, color: isSelected ? Colors.blueAccent : Colors.grey),
+      title: Text(
+        label,
+        style: TextStyle(
+          color: isSelected ? Colors.blueAccent : Colors.black87,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 24),
-          Text(label),
-        ],
-      ),
+      selected: isSelected,
+      onTap: () => _onItemTapped(index),
     );
   }
 }

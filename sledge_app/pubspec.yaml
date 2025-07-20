@@ -36,6 +36,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   geolocator: ^14.0.2
   geocoding: ^4.0.0
+  firebase_core: ^3.15.1
+  firebase_auth: ^5.1.0 # Added for Firebase Authentication
+  cloud_firestore: ^5.0.0 # Added for Firebase Cloud Firestore
 
 dev_dependencies:
   flutter_test:
